@@ -23,6 +23,25 @@ input[type=range]{width:100%}.field{margin-bottom:11px}.field label{display:bloc
 .item{border:1px solid var(--line);background:#0f141d;border-radius:11px;padding:11px;margin-top:9px}.item h3{font-size:14px;margin:0 0 5px}.item small{color:var(--muted)}.item p{font-size:13px;color:#d7dfe9}.actions{display:flex;gap:7px;flex-wrap:wrap;margin-top:8px}
 .empty{text-align:center;color:var(--muted);padding:18px}.mini{font-size:12px;color:var(--muted);line-height:1.5}
 @media(max-width:950px){main{grid-template-columns:1fr}header{position:static}}
+
+/* ===== MEYDEN 360 — MODULES AVANCÉS AJOUTÉS SANS MODIFIER LE V3 ===== */
+.adv-wrap{max-width:1500px;margin:0 auto 28px;padding:0 18px}
+.adv-shell{background:var(--panel);border:1px solid var(--line);border-radius:15px;overflow:hidden;box-shadow:0 18px 50px rgba(0,0,0,.22)}
+.adv-nav{display:flex;gap:8px;overflow:auto;padding:12px;border-bottom:1px solid var(--line);background:#10151d}
+.adv-nav button{white-space:nowrap}
+.adv-tab{display:none;padding:16px}.adv-tab.active{display:block}
+.adv-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+.adv-grid2{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.adv-metric{background:#0f141d;border:1px solid var(--line);border-radius:12px;padding:13px}
+.adv-metric small{display:block;color:var(--muted)}.adv-metric strong{display:block;font-size:21px;margin-top:6px}
+.adv-callout{border-left:4px solid var(--accent);background:#0f141d;padding:12px;border-radius:9px;color:#d6dee9;font-size:13px;line-height:1.5}
+.adv-table{width:100%;border-collapse:collapse;font-size:13px}.adv-table th,.adv-table td{padding:9px;border-bottom:1px solid var(--line);text-align:left;vertical-align:top}.adv-table th{color:var(--muted)}
+.adv-scroll{overflow:auto}.adv-pill{display:inline-block;background:var(--panel2);border:1px solid var(--line);padding:4px 8px;border-radius:999px;font-size:11px}
+.adv-file{display:none}.adv-log{max-height:170px;overflow:auto;background:#090b0f;border:1px solid var(--line);border-radius:9px;padding:10px;font-family:monospace;font-size:11px;color:#b9c6d7;white-space:pre-wrap}
+.adv-progress{height:9px;background:#090b0f;border-radius:999px;overflow:hidden;margin-top:8px}.adv-progress>div{height:100%;width:0;background:var(--accent);transition:width .2s}
+.adv-danger-zone{border:1px solid #6e2830;background:#241116;border-radius:10px;padding:12px}
+@media(max-width:950px){.adv-grid,.adv-grid2{grid-template-columns:1fr}}
+
 </style>
 </head>
 <body>
@@ -112,6 +131,157 @@ Chaque bouton produit maintenant une action, un message de confirmation ou une e
 </aside>
 </main>
 
+<section class="adv-wrap" id="meydenAdvanced">
+  <div class="adv-shell">
+    <div class="head">
+      <div>
+        <h2>MEYDEN 360 — Centre de production avancé</h2>
+        <div class="mini">Modules ajoutés au V3 actuel · fonctionnement local immédiat · backend futur prêt à brancher</div>
+      </div>
+      <span class="badge" id="advModeBadge">MODE LOCAL</span>
+    </div>
+
+    <div class="adv-nav">
+      <button class="primary" data-advtab="advDashboard">Capacité</button>
+      <button data-advtab="advProjects">Projets</button>
+      <button data-advtab="advUpload">Réception 360</button>
+      <button data-advtab="advLibrary">Bibliothèque</button>
+      <button data-advtab="advJobs">Traitements</button>
+      <button data-advtab="advUsers">Utilisateurs</button>
+      <button data-advtab="advApi">Connexion cloud</button>
+    </div>
+
+    <div id="advDashboard" class="adv-tab active">
+      <div class="adv-grid">
+        <div class="adv-metric"><small>Rushs entrants</small><strong id="advIncoming">0 Go / 835 Go</strong><div class="adv-progress"><div id="advIncomingBar"></div></div></div>
+        <div class="adv-metric"><small>Bibliothèque interne</small><strong id="advLibraryMetric">0 Go / 835 Go</strong><div class="adv-progress"><div id="advLibraryBar"></div></div></div>
+        <div class="adv-metric"><small>Proxies et temporaires</small><strong id="advTempMetric">0 Go / 500 Go</strong><div class="adv-progress"><div id="advTempBar"></div></div></div>
+      </div>
+      <div style="height:12px"></div>
+      <div class="adv-callout" id="advSystemMessage">
+        Le HTML peut gérer immédiatement les projets, l’index des fichiers, les métadonnées, les sélections et les demandes de traitement.
+        Le stockage réel de 1,67 To sera activé dès que l’API et Cloudflare R2/S3 seront branchés.
+      </div>
+      <div class="row">
+        <button id="advRefreshDashboard">Actualiser</button>
+        <button id="advCreateDemo" class="primary">Créer une démonstration</button>
+        <button id="advExportState">Exporter l’état complet</button>
+      </div>
+    </div>
+
+    <div id="advProjects" class="adv-tab">
+      <div class="adv-grid2">
+        <div>
+          <div class="field"><label>Nom du projet</label><input id="advProjectName" placeholder="Ex. Symbioz 2.0 — caméra 360"></div>
+          <div class="field"><label>Artiste / production</label><input id="advProjectArtist" placeholder="Meyden / Nadine Samuel"></div>
+          <div class="field"><label>Description</label><textarea id="advProjectDescription"></textarea></div>
+          <button id="advAddProject" class="primary">Créer le projet</button>
+        </div>
+        <div id="advProjectList"></div>
+      </div>
+    </div>
+
+    <div id="advUpload" class="adv-tab">
+      <div class="adv-grid2">
+        <div>
+          <div class="field"><label>Projet de destination</label><select id="advUploadProject"></select></div>
+          <div class="field"><label>Catégorie</label><select id="advUploadType"><option>Rushs originaux 360</option><option>Proxy</option><option>Master</option><option>Export final</option><option>Fichier temporaire</option></select></div>
+          <div class="row">
+            <label class="filebtn" for="advFolderInput">Choisir un dossier complet</label>
+            <input class="adv-file" id="advFolderInput" type="file" webkitdirectory directory multiple>
+            <label class="filebtn" for="advMultiInput">Choisir plusieurs fichiers</label>
+            <input class="adv-file" id="advMultiInput" type="file" multiple accept="video/*,.insv,.lrv,.mp4,.mov,.mkv,.webm,.insp">
+          </div>
+          <div class="row">
+            <button id="advAnalyzeFiles">Analyser les fichiers</button>
+            <button id="advStartUpload" class="primary">Recevoir / indexer</button>
+            <button id="advPauseUpload">Pause</button>
+            <button id="advResumeUpload">Reprendre</button>
+            <button id="advCancelUpload" class="danger">Annuler</button>
+          </div>
+          <div class="adv-progress"><div id="advUploadBar"></div></div>
+          <div id="advUploadStatus" class="status" style="margin-top:8px">Aucun fichier sélectionné.</div>
+        </div>
+        <div>
+          <div class="adv-callout">
+            Le système détecte les extensions 360, regroupe les fichiers associés et prépare les tâches de proxy/stitching.
+            En mode cloud, chaque fichier sera envoyé directement vers le stockage sans passer par Vercel.
+          </div>
+          <div id="advUploadQueue"></div>
+        </div>
+      </div>
+    </div>
+
+    <div id="advLibrary" class="adv-tab">
+      <div class="row">
+        <input id="advLibrarySearch" placeholder="Rechercher un fichier, projet ou statut…" style="flex:1;min-width:220px;background:#0d1118;color:white;border:1px solid var(--line);border-radius:9px;padding:10px">
+        <button id="advRefreshLibrary">Actualiser</button>
+        <button id="advExportLibrary">Exporter l’index</button>
+      </div>
+      <div class="adv-scroll">
+        <table class="adv-table">
+          <thead><tr><th>Fichier</th><th>Type</th><th>Projet</th><th>Taille</th><th>360</th><th>Statut</th><th>Actions</th></tr></thead>
+          <tbody id="advLibraryRows"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <div id="advJobs" class="adv-tab">
+      <div class="row">
+        <button id="advAddProxyJob" class="primary">Créer un proxy</button>
+        <button id="advAddStitchJob">Stitching 360</button>
+        <button id="advAddChecksumJob">Vérifier l’intégrité</button>
+        <button id="advRunNext">Exécuter le prochain</button>
+        <button id="advClearDone" class="danger">Retirer les tâches terminées</button>
+      </div>
+      <div class="adv-scroll">
+        <table class="adv-table">
+          <thead><tr><th>Tâche</th><th>Fichier</th><th>Statut</th><th>Progression</th><th>Action</th></tr></thead>
+          <tbody id="advJobRows"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <div id="advUsers" class="adv-tab">
+      <div class="adv-grid2">
+        <div>
+          <div class="field"><label>Nom</label><input id="advUserName" placeholder="Nadine Samuel"></div>
+          <div class="field"><label>Courriel</label><input id="advUserEmail" type="email"></div>
+          <div class="field"><label>Rôle</label><select id="advUserRole"><option>Téléversement</option><option>Montage</option><option>Administrateur</option><option>Lecture seulement</option></select></div>
+          <button id="advAddUser" class="primary">Ajouter l’utilisateur</button>
+        </div>
+        <div id="advUserList"></div>
+      </div>
+    </div>
+
+    <div id="advApi" class="adv-tab">
+      <div class="adv-grid2">
+        <div>
+          <div class="field"><label>Mode d’utilisation</label><select id="advAppMode"><option value="local">Local / démonstration</option><option value="api">Cloud / API</option></select></div>
+          <div class="field"><label>URL du backend</label><input id="advApiUrl" placeholder="https://api.meyden360.ca"></div>
+          <div class="field"><label>Jeton d’accès</label><input id="advApiToken" type="password"></div>
+          <button id="advSaveApi" class="primary">Sauvegarder la connexion</button>
+          <button id="advTestApi">Tester l’API</button>
+        </div>
+        <div>
+          <div class="field"><label>Capacité rushs entrants (Go)</label><input id="advIncomingLimit" type="number" value="835"></div>
+          <div class="field"><label>Capacité bibliothèque (Go)</label><input id="advLibraryLimit" type="number" value="835"></div>
+          <div class="field"><label>Capacité temporaire (Go)</label><input id="advTempLimit" type="number" value="500"></div>
+          <button id="advSaveLimits">Sauvegarder les capacités</button>
+        </div>
+      </div>
+      <div style="height:12px"></div>
+      <div class="adv-log" id="advApiLog">Prêt.</div>
+      <div style="height:12px"></div>
+      <div class="adv-danger-zone">
+        <strong>Important</strong>
+        <div class="mini">Les clés secrètes R2/S3 ne doivent jamais être écrites dans ce HTML public. Elles restent uniquement dans le backend futur.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
 <script>
 'use strict';
 const $=id=>document.getElementById(id);
@@ -162,6 +332,153 @@ $('clearAll').onclick=()=>{if(confirm('Effacer toutes les sélections et la sauv
 
 document.addEventListener('keydown',e=>{if(['INPUT','TEXTAREA','SELECT'].includes(document.activeElement.tagName))return;if(e.code==='Space'){e.preventDefault();$('playPause').click()}if(e.key.toLowerCase()==='i')$('setIn').click();if(e.key.toLowerCase()==='o')$('setOut').click()});
 updateLabels();render();
+
+/* ===== MEYDEN 360 — LOGIQUE DES MODULES AVANCÉS ===== */
+const ADV_KEY='meyden360AdvancedStateV1';
+let advSelectedFiles=[],advUploadPaused=false,advUploadCancelled=false;
+let advState=JSON.parse(localStorage.getItem(ADV_KEY)||'null')||{
+  projects:[],assets:[],jobs:[],users:[],
+  settings:{mode:'local',apiUrl:'',apiToken:'',incomingLimit:835,libraryLimit:835,tempLimit:500}
+};
+function advSave(){localStorage.setItem(ADV_KEY,JSON.stringify(advState))}
+function advUid(){return crypto.randomUUID?crypto.randomUUID():Date.now()+'-'+Math.random()}
+function advEsc(s=''){return String(s).replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]))}
+function advBytes(n){if(!n)return'0 Mo';const u=['o','Ko','Mo','Go','To'];let i=0;while(n>=1024&&i<u.length-1){n/=1024;i++}return n.toFixed(i>1?2:0)+' '+u[i]}
+function advDownload(name,data,type='application/json'){const b=data instanceof Blob?data:new Blob([data],{type}),a=document.createElement('a');a.href=URL.createObjectURL(b);a.download=name;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(a.href),3000)}
+function advLog(msg){const e=document.getElementById('advApiLog');if(e)e.textContent='['+new Date().toLocaleTimeString()+'] '+msg+'\n'+e.textContent}
+function advProjectName(id){return advState.projects.find(p=>p.id===id)?.name||'Sans projet'}
+function advEnsureProject(){if(!advState.projects.length){advState.projects.push({id:advUid(),name:'Projet 360 Meyden',artist:'Meyden',description:'Projet principal',createdAt:new Date().toISOString()});advSave()}}
+async function advApi(path,options={}){
+  if(advState.settings.mode!=='api')throw new Error('Mode cloud non activé');
+  if(!advState.settings.apiUrl)throw new Error('URL du backend manquante');
+  const headers={'Content-Type':'application/json',...(options.headers||{})};
+  if(advState.settings.apiToken)headers.Authorization='Bearer '+advState.settings.apiToken;
+  const response=await fetch(advState.settings.apiUrl.replace(/\/$/,'')+path,{...options,headers});
+  if(!response.ok)throw new Error((await response.text())||'HTTP '+response.status);
+  return response.headers.get('content-type')?.includes('json')?response.json():response.text();
+}
+function advDetect360(file){
+  const ext=(file.name.split('.').pop()||'').toLowerCase();
+  return ['insv','insp','lrv'].includes(ext)||/360|insta|theta|gopro|max/i.test(file.name);
+}
+function advRenderProjects(){
+  advEnsureProject();
+  const opts=advState.projects.map(p=>`<option value="${p.id}">${advEsc(p.name)}</option>`).join('');
+  document.getElementById('advUploadProject').innerHTML=opts;
+  document.getElementById('advProjectList').innerHTML=advState.projects.map(p=>`<div class="item"><h3>${advEsc(p.name)}</h3><small>${advEsc(p.artist||'')} · ${new Date(p.createdAt).toLocaleDateString()}</small><p>${advEsc(p.description||'')}</p><div class="actions"><button onclick="advRenameProject('${p.id}')">Renommer</button><button class="danger" onclick="advDeleteProject('${p.id}')">Supprimer</button></div></div>`).join('');
+}
+window.advRenameProject=id=>{const p=advState.projects.find(x=>x.id===id),n=prompt('Nouveau nom',p?.name||'');if(p&&n){p.name=n;advSave();advRenderAll()}};
+window.advDeleteProject=id=>{if(advState.projects.length<=1)return alert('Il faut conserver au moins un projet.');if(confirm('Supprimer ce projet de la liste ?')){advState.projects=advState.projects.filter(x=>x.id!==id);advSave();advRenderAll()}};
+function advRenderDashboard(){
+  const incoming=advState.assets.filter(a=>a.type==='Rushs originaux 360').reduce((s,a)=>s+(a.size||0),0)/1e9;
+  const library=advState.assets.filter(a=>['Master','Export final'].includes(a.type)).reduce((s,a)=>s+(a.size||0),0)/1e9;
+  const temp=advState.assets.filter(a=>['Proxy','Fichier temporaire'].includes(a.type)).reduce((s,a)=>s+(a.size||0),0)/1e9;
+  const st=advState.settings;
+  document.getElementById('advIncoming').textContent=incoming.toFixed(2)+' Go / '+st.incomingLimit+' Go';
+  document.getElementById('advLibraryMetric').textContent=library.toFixed(2)+' Go / '+st.libraryLimit+' Go';
+  document.getElementById('advTempMetric').textContent=temp.toFixed(2)+' Go / '+st.tempLimit+' Go';
+  document.getElementById('advIncomingBar').style.width=Math.min(100,incoming/st.incomingLimit*100)+'%';
+  document.getElementById('advLibraryBar').style.width=Math.min(100,library/st.libraryLimit*100)+'%';
+  document.getElementById('advTempBar').style.width=Math.min(100,temp/st.tempLimit*100)+'%';
+  document.getElementById('advModeBadge').textContent=st.mode==='api'?'MODE CLOUD':'MODE LOCAL';
+}
+function advRenderUploadQueue(){
+  document.getElementById('advUploadQueue').innerHTML=advSelectedFiles.length?advSelectedFiles.map(f=>`<div class="item"><h3>${advEsc(f.webkitRelativePath||f.name)}</h3><small>${advBytes(f.size)} · ${advDetect360(f)?'360 détecté':'vidéo standard'}</small></div>`).join(''):'<div class="empty">Aucun fichier dans la file.</div>';
+}
+function advSelectFiles(files){advSelectedFiles=[...files];advRenderUploadQueue();document.getElementById('advUploadStatus').textContent=advSelectedFiles.length+' fichier(s) sélectionné(s).'}
+function advRenderLibrary(){
+  const q=(document.getElementById('advLibrarySearch')?.value||'').toLowerCase();
+  const rows=advState.assets.filter(a=>JSON.stringify(a).toLowerCase().includes(q)).map(a=>`<tr>
+    <td>${advEsc(a.name)}</td><td>${advEsc(a.type)}</td><td>${advEsc(advProjectName(a.projectId))}</td><td>${advBytes(a.size)}</td>
+    <td>${a.is360?'Oui':'Non'}</td><td><span class="adv-pill">${advEsc(a.status)}</span></td>
+    <td><button onclick="advQueueFromAsset('${a.id}','Proxy')">Proxy</button> <button onclick="advQueueFromAsset('${a.id}','Stitching 360')">Stitch</button> <button onclick="advArchive('${a.id}')">Archiver</button> <button class="danger" onclick="advTrash('${a.id}')">Corbeille</button></td>
+  </tr>`).join('');
+  document.getElementById('advLibraryRows').innerHTML=rows||'<tr><td colspan="7">Bibliothèque vide.</td></tr>';
+}
+window.advArchive=id=>{const a=advState.assets.find(x=>x.id===id);if(a){a.status='Archivé';advSave();advRenderLibrary()}};
+window.advTrash=id=>{const a=advState.assets.find(x=>x.id===id);if(a){a.status='Corbeille 30 jours';a.trashAt=new Date().toISOString();advSave();advRenderLibrary()}};
+window.advQueueFromAsset=(id,type)=>{const a=advState.assets.find(x=>x.id===id);if(!a)return;advState.jobs.push({id:advUid(),type,file:a.name,assetId:id,status:'En attente',progress:0});advSave();advRenderJobs();alert(type+' ajouté à la file.')};
+function advRenderJobs(){
+  document.getElementById('advJobRows').innerHTML=advState.jobs.map(j=>`<tr><td>${advEsc(j.type)}</td><td>${advEsc(j.file||'—')}</td><td>${advEsc(j.status)}</td><td>${j.progress||0}%</td><td><button onclick="advRunJob('${j.id}')">Exécuter</button> <button class="danger" onclick="advRemoveJob('${j.id}')">Retirer</button></td></tr>`).join('')||'<tr><td colspan="5">Aucun traitement.</td></tr>';
+}
+window.advRemoveJob=id=>{advState.jobs=advState.jobs.filter(x=>x.id!==id);advSave();advRenderJobs()};
+window.advRunJob=async id=>{
+  const j=advState.jobs.find(x=>x.id===id);if(!j)return;
+  if(advState.settings.mode==='api'){
+    try{j.status='Envoi au serveur';advRenderJobs();await advApi('/jobs',{method:'POST',body:JSON.stringify(j)});j.status='Envoyé au serveur';j.progress=100;advLog('Tâche envoyée : '+j.type)}
+    catch(e){j.status='Erreur API';advLog(e.message)}
+    advSave();advRenderJobs();return;
+  }
+  j.status='Simulation locale';j.progress=0;advRenderJobs();
+  const t=setInterval(()=>{j.progress=Math.min(100,j.progress+10);if(j.progress>=100){clearInterval(t);j.status='Prêt pour backend';}advSave();advRenderJobs()},180);
+};
+function advRenderUsers(){
+  document.getElementById('advUserList').innerHTML=advState.users.map(u=>`<div class="item"><h3>${advEsc(u.name)}</h3><small>${advEsc(u.email)} · ${advEsc(u.role)} · ${advEsc(u.status)}</small><div class="actions"><button onclick="advToggleUser('${u.id}')">${u.status==='Actif'?'Désactiver':'Activer'}</button><button class="danger" onclick="advRemoveUser('${u.id}')">Retirer</button></div></div>`).join('')||'<div class="empty">Aucun utilisateur.</div>';
+}
+window.advToggleUser=id=>{const u=advState.users.find(x=>x.id===id);if(u){u.status=u.status==='Actif'?'Désactivé':'Actif';advSave();advRenderUsers()}};
+window.advRemoveUser=id=>{advState.users=advState.users.filter(x=>x.id!==id);advSave();advRenderUsers()};
+function advLoadSettings(){
+  const s=advState.settings;
+  document.getElementById('advAppMode').value=s.mode;document.getElementById('advApiUrl').value=s.apiUrl;document.getElementById('advApiToken').value=s.apiToken;
+  document.getElementById('advIncomingLimit').value=s.incomingLimit;document.getElementById('advLibraryLimit').value=s.libraryLimit;document.getElementById('advTempLimit').value=s.tempLimit;
+}
+function advRenderAll(){advEnsureProject();advRenderProjects();advRenderDashboard();advRenderUploadQueue();advRenderLibrary();advRenderJobs();advRenderUsers();advLoadSettings()}
+
+document.querySelectorAll('[data-advtab]').forEach(b=>b.addEventListener('click',()=>{
+  document.querySelectorAll('[data-advtab]').forEach(x=>x.classList.remove('primary'));b.classList.add('primary');
+  document.querySelectorAll('.adv-tab').forEach(x=>x.classList.remove('active'));document.getElementById(b.dataset.advtab).classList.add('active');
+}));
+document.getElementById('advAddProject').onclick=()=>{const n=document.getElementById('advProjectName').value.trim();if(!n)return alert('Entre un nom de projet.');advState.projects.push({id:advUid(),name:n,artist:document.getElementById('advProjectArtist').value.trim(),description:document.getElementById('advProjectDescription').value.trim(),createdAt:new Date().toISOString()});advSave();advRenderAll()};
+document.getElementById('advFolderInput').onchange=e=>advSelectFiles(e.target.files);
+document.getElementById('advMultiInput').onchange=e=>advSelectFiles(e.target.files);
+document.getElementById('advAnalyzeFiles').onclick=()=>{
+  if(!advSelectedFiles.length)return alert('Sélectionne des fichiers.');
+  const count360=advSelectedFiles.filter(advDetect360).length,total=advSelectedFiles.reduce((s,f)=>s+f.size,0);
+  document.getElementById('advUploadStatus').textContent=`Analyse terminée : ${advSelectedFiles.length} fichiers, ${count360} fichier(s) 360, ${advBytes(total)}.`;
+};
+document.getElementById('advPauseUpload').onclick=()=>{advUploadPaused=true;document.getElementById('advUploadStatus').textContent='Réception en pause.'};
+document.getElementById('advResumeUpload').onclick=()=>{advUploadPaused=false;document.getElementById('advUploadStatus').textContent='Réception reprise.'};
+document.getElementById('advCancelUpload').onclick=()=>{advUploadCancelled=true;document.getElementById('advUploadStatus').textContent='Réception annulée.'};
+document.getElementById('advStartUpload').onclick=async()=>{
+  if(!advSelectedFiles.length)return alert('Sélectionne un dossier ou des fichiers.');
+  advUploadPaused=false;advUploadCancelled=false;let sent=0,total=advSelectedFiles.reduce((s,f)=>s+f.size,0),done=0;
+  for(const f of advSelectedFiles){
+    while(advUploadPaused&&!advUploadCancelled)await new Promise(r=>setTimeout(r,200));
+    if(advUploadCancelled)break;
+    document.getElementById('advUploadStatus').textContent='Réception : '+f.name;
+    if(advState.settings.mode==='api'){
+      try{
+        const init=await advApi('/uploads/init',{method:'POST',body:JSON.stringify({name:f.name,size:f.size,type:f.type,projectId:document.getElementById('advUploadProject').value,category:document.getElementById('advUploadType').value,path:f.webkitRelativePath||f.name})});
+        if(!init.uploadUrl)throw new Error('URL signée absente');
+        await fetch(init.uploadUrl,{method:'PUT',body:f});
+        await advApi('/uploads/complete',{method:'POST',body:JSON.stringify({uploadId:init.uploadId})});
+      }catch(e){advLog('Erreur '+f.name+' : '+e.message);continue}
+    }else{await new Promise(r=>setTimeout(r,Math.min(700,Math.max(80,f.size/10000000))))}
+    advState.assets.push({id:advUid(),name:f.name,path:f.webkitRelativePath||f.name,type:document.getElementById('advUploadType').value,projectId:document.getElementById('advUploadProject').value,size:f.size,is360:advDetect360(f),status:advState.settings.mode==='api'?'Téléversé':'Indexé localement',createdAt:new Date().toISOString()});
+    sent+=f.size;done++;document.getElementById('advUploadBar').style.width=Math.round(sent/total*100)+'%';advSave();advRenderDashboard();advRenderLibrary();
+  }
+  document.getElementById('advUploadStatus').textContent=advUploadCancelled?'Réception annulée.':done+' fichier(s) reçus/indexés.';
+};
+document.getElementById('advAddProxyJob').onclick=()=>{advState.jobs.push({id:advUid(),type:'Création proxy 1080p',file:'Sélectionner depuis la bibliothèque',status:'En attente',progress:0});advSave();advRenderJobs()};
+document.getElementById('advAddStitchJob').onclick=()=>{advState.jobs.push({id:advUid(),type:'Stitching 360',file:'Sélectionner depuis la bibliothèque',status:'En attente',progress:0});advSave();advRenderJobs()};
+document.getElementById('advAddChecksumJob').onclick=()=>{advState.jobs.push({id:advUid(),type:'Vérification checksum',file:'Bibliothèque',status:'En attente',progress:0});advSave();advRenderJobs()};
+document.getElementById('advRunNext').onclick=()=>{const j=advState.jobs.find(x=>x.status==='En attente');if(j)advRunJob(j.id);else alert('Aucune tâche en attente.')};
+document.getElementById('advClearDone').onclick=()=>{advState.jobs=advState.jobs.filter(j=>!['Prêt pour backend','Envoyé au serveur'].includes(j.status));advSave();advRenderJobs()};
+document.getElementById('advAddUser').onclick=()=>{const n=document.getElementById('advUserName').value.trim(),e=document.getElementById('advUserEmail').value.trim();if(!n||!e)return alert('Nom et courriel requis.');advState.users.push({id:advUid(),name:n,email:e,role:document.getElementById('advUserRole').value,status:'Actif'});advSave();advRenderUsers()};
+document.getElementById('advLibrarySearch').oninput=advRenderLibrary;
+document.getElementById('advRefreshLibrary').onclick=advRenderLibrary;
+document.getElementById('advExportLibrary').onclick=()=>advDownload('meyden-360-library.json',JSON.stringify(advState.assets,null,2));
+document.getElementById('advRefreshDashboard').onclick=advRenderDashboard;
+document.getElementById('advCreateDemo').onclick=()=>{
+  const p=advState.projects[0];advState.assets.push({id:advUid(),name:'demo_360.insv',type:'Rushs originaux 360',projectId:p.id,size:1250000000,is360:true,status:'Téléversé',createdAt:new Date().toISOString()});
+  advState.jobs.push({id:advUid(),type:'Création proxy 1080p',file:'demo_360.insv',status:'En attente',progress:0});advSave();advRenderAll();
+};
+document.getElementById('advExportState').onclick=()=>advDownload('meyden-360-etat-complet.json',JSON.stringify(advState,null,2));
+document.getElementById('advSaveApi').onclick=()=>{advState.settings.mode=document.getElementById('advAppMode').value;advState.settings.apiUrl=document.getElementById('advApiUrl').value.trim();advState.settings.apiToken=document.getElementById('advApiToken').value.trim();advSave();advRenderDashboard();advLog('Configuration API sauvegardée.')};
+document.getElementById('advTestApi').onclick=async()=>{if(advState.settings.mode==='local')return advLog('Mode local actif. Passe en mode cloud pour tester le backend.');try{const d=await advApi('/health');advLog('API connectée : '+JSON.stringify(d))}catch(e){advLog('Erreur API : '+e.message)}};
+document.getElementById('advSaveLimits').onclick=()=>{advState.settings.incomingLimit=Number(document.getElementById('advIncomingLimit').value)||835;advState.settings.libraryLimit=Number(document.getElementById('advLibraryLimit').value)||835;advState.settings.tempLimit=Number(document.getElementById('advTempLimit').value)||500;advSave();advRenderDashboard();advLog('Capacités sauvegardées.')};
+advRenderAll();
+
 </script>
 </body>
 </html>
